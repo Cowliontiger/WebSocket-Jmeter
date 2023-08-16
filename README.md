@@ -1,1 +1,2 @@
-
+#WebSocket-Jmeter
+通过Jmeter的websocket协议与Java Request编程方式进行压测，具体方案请查看WebSocket性能测试方案.docx
