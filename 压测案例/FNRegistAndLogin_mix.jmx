@@ -1,0 +1,658 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jmeterTestPlan version="1.2" properties="5.0" jmeter="5.5">
+  <hashTree>
+    <TestPlan guiclass="TestPlanGui" testclass="TestPlan" testname="Test Plan" enabled="true">
+      <stringProp name="TestPlan.comments"></stringProp>
+      <boolProp name="TestPlan.functional_mode">false</boolProp>
+      <boolProp name="TestPlan.tearDown_on_shutdown">true</boolProp>
+      <boolProp name="TestPlan.serialize_threadgroups">false</boolProp>
+      <elementProp name="TestPlan.user_defined_variables" elementType="Arguments" guiclass="ArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+        <collectionProp name="Arguments.arguments">
+          <elementProp name="threadNum" elementType="Argument">
+            <stringProp name="Argument.name">threadNum</stringProp>
+            <stringProp name="Argument.value">${__P(threadNum,1)}</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="loopNum" elementType="Argument">
+            <stringProp name="Argument.name">loopNum</stringProp>
+            <stringProp name="Argument.value">${__P(loopNum,1)}</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="rampupTime" elementType="Argument">
+            <stringProp name="Argument.name">rampupTime</stringProp>
+            <stringProp name="Argument.value">${__P(rampupTime,1)}</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+        </collectionProp>
+      </elementProp>
+      <stringProp name="TestPlan.user_define_classpath"></stringProp>
+    </TestPlan>
+    <hashTree>
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Thread Group" enabled="true">
+        <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
+        <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
+          <boolProp name="LoopController.continue_forever">false</boolProp>
+          <stringProp name="LoopController.loops">${loopNum}</stringProp>
+        </elementProp>
+        <stringProp name="ThreadGroup.num_threads">${threadNum}</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">${rampupTime}</stringProp>
+        <boolProp name="ThreadGroup.scheduler">false</boolProp>
+        <stringProp name="ThreadGroup.duration"></stringProp>
+        <stringProp name="ThreadGroup.delay"></stringProp>
+        <boolProp name="ThreadGroup.same_user_on_next_iteration">true</boolProp>
+      </ThreadGroup>
+      <hashTree>
+        <BeanShellPreProcessor guiclass="TestBeanGUI" testclass="BeanShellPreProcessor" testname="BeanShell PreProcessor" enabled="false">
+          <boolProp name="resetInterpreter">false</boolProp>
+          <stringProp name="parameters"></stringProp>
+          <stringProp name="filename"></stringProp>
+          <stringProp name="script">import java.util.Random;  
+
+String random_len(int string_length) { 
+
+    chars = &quot;ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz&quot;;  
+
+    randomstring =&quot;&quot;;  
+
+    for (int i=0; i&lt;string_length; i++) {  
+
+        Random randomGenerator = new Random();  
+
+        int randomInt = randomGenerator.nextInt(chars.length());  
+
+        randomstring += chars.substring(randomInt,randomInt+1);  
+
+    }  
+
+    return randomstring; 
+
+} 
+
+log.info(&quot;8位长度：&quot;+random_len(8)); 
+
+log.info(&quot;16位长度：&quot;+random_len(16)); 
+
+vars.put(&quot;random_8&quot;, random_len(8));  
+
+vars.put(&quot;random_16&quot;, random_len(16)); 
+
+
+</stringProp>
+        </BeanShellPreProcessor>
+        <hashTree/>
+        <BeanShellPreProcessor guiclass="TestBeanGUI" testclass="BeanShellPreProcessor" testname="BeanShell PreProcessor" enabled="false">
+          <boolProp name="resetInterpreter">false</boolProp>
+          <stringProp name="parameters"></stringProp>
+          <stringProp name="filename"></stringProp>
+          <stringProp name="script">String str = &quot;{\&quot;cmd\&quot;:\&quot;login\&quot;,\&quot;param\&quot;:{\&quot;channelId\&quot;:1,\&quot;deviceId\&quot;:\&quot;\&quot;,\&quot;account\&quot;:\&quot;${random_8}\&quot;,\&quot;password\&quot;:\&quot;aaaaaa\&quot;},\&quot;token\&quot;:\&quot;test123\&quot;,\&quot;pkgid\&quot;:921173154}&quot;; 
+String sign = Utils.md5(str);  
+vars.put(&quot;token&quot;,sign);</stringProp>
+        </BeanShellPreProcessor>
+        <hashTree/>
+        <BeanShellSampler guiclass="BeanShellSamplerGui" testclass="BeanShellSampler" testname="random" enabled="true">
+          <stringProp name="BeanShellSampler.query">import java.util.Random;  
+
+String random_len(int string_length) { 
+
+    chars = &quot;ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz&quot;;  
+
+    randomstring =&quot;&quot;;  
+
+    for (int i=0; i&lt;string_length; i++) {  
+
+        Random randomGenerator = new Random();  
+
+        int randomInt = randomGenerator.nextInt(chars.length());  
+
+        randomstring += chars.substring(randomInt,randomInt+1);  
+
+    }  
+
+    return randomstring; 
+
+} 
+
+log.info(&quot;8位长度：&quot;+random_len(8)); 
+
+log.info(&quot;16位长度：&quot;+random_len(16)); 
+
+vars.put(&quot;random_8&quot;, random_len(8));  
+
+vars.put(&quot;random_16&quot;, random_len(16)); 
+
+
+</stringProp>
+          <stringProp name="BeanShellSampler.filename"></stringProp>
+          <stringProp name="BeanShellSampler.parameters"></stringProp>
+          <boolProp name="BeanShellSampler.resetInterpreter">false</boolProp>
+        </BeanShellSampler>
+        <hashTree/>
+        <BeanShellSampler guiclass="BeanShellSamplerGui" testclass="BeanShellSampler" testname="md5" enabled="true">
+          <stringProp name="BeanShellSampler.query">String str = &quot;{\&quot;cmd\&quot;:\&quot;login\&quot;,\&quot;param\&quot;:{\&quot;channelId\&quot;:1,\&quot;deviceId\&quot;:\&quot;\&quot;,\&quot;account\&quot;:\&quot;${random_8}\&quot;,\&quot;password\&quot;:\&quot;aaaaaa\&quot;},\&quot;token\&quot;:\&quot;test123\&quot;,\&quot;pkgid\&quot;:921173154}&quot;; 
+vars.put(&quot;token&quot;,sign);</stringProp>
+          <stringProp name="BeanShellSampler.filename"></stringProp>
+          <stringProp name="BeanShellSampler.parameters"></stringProp>
+          <boolProp name="BeanShellSampler.resetInterpreter">false</boolProp>
+        </BeanShellSampler>
+        <hashTree/>
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="注册账号" enabled="true">
+          <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+            <collectionProp name="Arguments.arguments">
+              <elementProp name="" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                <stringProp name="Argument.value">{&quot;cmd&quot;:&quot;login&quot;,&quot;param&quot;:{&quot;channelId&quot;:1,&quot;deviceId&quot;:&quot;&quot;,&quot;account&quot;:&quot;${random_8}&quot;,&quot;password&quot;:&quot;aaaaaa&quot;},&quot;token&quot;:&quot;${token}&quot;,&quot;pkgid&quot;:921173154}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+            </collectionProp>
+          </elementProp>
+          <stringProp name="HTTPSampler.domain">1.1.195.209</stringProp>
+          <stringProp name="HTTPSampler.port">10080</stringProp>
+          <stringProp name="HTTPSampler.protocol">http</stringProp>
+          <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+          <stringProp name="HTTPSampler.path">/login</stringProp>
+          <stringProp name="HTTPSampler.method">POST</stringProp>
+          <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+          <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+          <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+          <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+          <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+          <stringProp name="HTTPSampler.response_timeout"></stringProp>
+        </HTTPSamplerProxy>
+        <hashTree/>
+        <eu.luminis.jmeter.wssampler.OpenWebSocketSampler guiclass="eu.luminis.jmeter.wssampler.OpenWebSocketSamplerGui" testclass="eu.luminis.jmeter.wssampler.OpenWebSocketSampler" testname="创建ws连接" enabled="true">
+          <boolProp name="TLS">false</boolProp>
+          <stringProp name="server">1.1.195.209</stringProp>
+          <stringProp name="port">50080</stringProp>
+          <stringProp name="path"></stringProp>
+          <stringProp name="connectTimeout">5000</stringProp>
+          <stringProp name="readTimeout">5000</stringProp>
+        </eu.luminis.jmeter.wssampler.OpenWebSocketSampler>
+        <hashTree/>
+        <eu.luminis.jmeter.wssampler.RequestResponseWebSocketSampler guiclass="eu.luminis.jmeter.wssampler.RequestResponseWebSocketSamplerGui" testclass="eu.luminis.jmeter.wssampler.RequestResponseWebSocketSampler" testname="登录" enabled="true">
+          <boolProp name="createNewConnection">false</boolProp>
+          <boolProp name="TLS">false</boolProp>
+          <stringProp name="server">106.15.195.209</stringProp>
+          <stringProp name="port">10080</stringProp>
+          <stringProp name="path"></stringProp>
+          <stringProp name="connectTimeout">20000</stringProp>
+          <boolProp name="binaryPayload">false</boolProp>
+          <stringProp name="requestData">${requestStr}</stringProp>
+          <stringProp name="readTimeout">5000</stringProp>
+          <boolProp name="loadDataFromFile">false</boolProp>
+          <stringProp name="dataFile"></stringProp>
+        </eu.luminis.jmeter.wssampler.RequestResponseWebSocketSampler>
+        <hashTree>
+          <BeanShellPreProcessor guiclass="TestBeanGUI" testclass="BeanShellPreProcessor" testname="BeanShell PreProcessor" enabled="true">
+            <boolProp name="resetInterpreter">false</boolProp>
+            <stringProp name="parameters"></stringProp>
+            <stringProp name="filename"></stringProp>
+            <stringProp name="script">
+String aa(){
+phone=${__time(/1000000000,)} + ${__Random(1,1000000000,)};
+ 
+String a = String.valueOf(phone);   //将phone转为字符串，因为手机号的要求类型为char
+
+return a;
+}
+String pkgid = aa();
+String str = &quot;{\&quot;cmd\&quot;:\&quot;connect\&quot;,\&quot;token\&quot;:\&quot;test123\&quot;,\&quot;param\&quot;:{\&quot;account\&quot;:\&quot;${random_8}\&quot;,\&quot;password\&quot;:\&quot;aaaaaa\&quot;,\&quot;channelId\&quot;:1,\&quot;deviceId\&quot;:\&quot;\&quot;},\&quot;pkgid\&quot;:&quot;+pkgid+&quot;}&quot;; 
+
+vars.put(&quot;tokenaa&quot;,sign);
+vars.put(&quot;pkgid&quot;,pkgid);
+log.info(&quot;str:&quot;+str);
+log.info(&quot;tokenaa:&quot;+sign);
+log.info(&quot;pkgid:&quot;+pkgid);
+
+
+String st2 = str.replace(&quot;test123&quot;,sign);
+vars.put(&quot;requestStr&quot;,st2);
+log.info(&quot;requestStr:&quot;+str2);</stringProp>
+          </BeanShellPreProcessor>
+          <hashTree/>
+        </hashTree>
+        <eu.luminis.jmeter.wssampler.SingleReadWebSocketSampler guiclass="eu.luminis.jmeter.wssampler.SingleReadWebSocketSamplerGui" testclass="eu.luminis.jmeter.wssampler.SingleReadWebSocketSampler" testname="WebSocket Single Read Sampler" enabled="false">
+          <boolProp name="TLS">false</boolProp>
+          <stringProp name="server"></stringProp>
+          <stringProp name="port">80</stringProp>
+          <stringProp name="path"></stringProp>
+          <stringProp name="connectTimeout">20000</stringProp>
+          <boolProp name="binaryPayload">false</boolProp>
+          <boolProp name="createNewConnection">false</boolProp>
+          <stringProp name="readTimeout">6000</stringProp>
+          <boolProp name="optional">false</boolProp>
+          <stringProp name="dataType">Text</stringProp>
+        </eu.luminis.jmeter.wssampler.SingleReadWebSocketSampler>
+        <hashTree/>
+        <eu.luminis.jmeter.wssampler.SingleReadWebSocketSampler guiclass="eu.luminis.jmeter.wssampler.SingleReadWebSocketSamplerGui" testclass="eu.luminis.jmeter.wssampler.SingleReadWebSocketSampler" testname="WebSocket Single Read Sampler" enabled="false">
+          <boolProp name="TLS">false</boolProp>
+          <stringProp name="server"></stringProp>
+          <stringProp name="port">80</stringProp>
+          <stringProp name="path"></stringProp>
+          <stringProp name="connectTimeout">20000</stringProp>
+          <boolProp name="binaryPayload">false</boolProp>
+          <boolProp name="createNewConnection">false</boolProp>
+          <stringProp name="readTimeout">6000</stringProp>
+          <boolProp name="optional">false</boolProp>
+          <stringProp name="dataType">Text</stringProp>
+        </eu.luminis.jmeter.wssampler.SingleReadWebSocketSampler>
+        <hashTree/>
+        <eu.luminis.jmeter.wssampler.SingleReadWebSocketSampler guiclass="eu.luminis.jmeter.wssampler.SingleReadWebSocketSamplerGui" testclass="eu.luminis.jmeter.wssampler.SingleReadWebSocketSampler" testname="WebSocket Single Read Sampler" enabled="false">
+          <boolProp name="TLS">false</boolProp>
+          <stringProp name="server"></stringProp>
+          <stringProp name="port">80</stringProp>
+          <stringProp name="path"></stringProp>
+          <stringProp name="connectTimeout">20000</stringProp>
+          <boolProp name="binaryPayload">false</boolProp>
+          <boolProp name="createNewConnection">false</boolProp>
+          <stringProp name="readTimeout">6000</stringProp>
+          <boolProp name="optional">false</boolProp>
+          <stringProp name="dataType">Text</stringProp>
+        </eu.luminis.jmeter.wssampler.SingleReadWebSocketSampler>
+        <hashTree/>
+        <eu.luminis.jmeter.wssampler.SingleReadWebSocketSampler guiclass="eu.luminis.jmeter.wssampler.SingleReadWebSocketSamplerGui" testclass="eu.luminis.jmeter.wssampler.SingleReadWebSocketSampler" testname="WebSocket Single Read Sampler" enabled="false">
+          <boolProp name="TLS">false</boolProp>
+          <stringProp name="server"></stringProp>
+          <stringProp name="port">80</stringProp>
+          <stringProp name="path"></stringProp>
+          <stringProp name="connectTimeout">20000</stringProp>
+          <boolProp name="binaryPayload">false</boolProp>
+          <boolProp name="createNewConnection">false</boolProp>
+          <stringProp name="readTimeout">6000</stringProp>
+          <boolProp name="optional">false</boolProp>
+          <stringProp name="dataType">Text</stringProp>
+        </eu.luminis.jmeter.wssampler.SingleReadWebSocketSampler>
+        <hashTree/>
+        <eu.luminis.jmeter.wssampler.SingleReadWebSocketSampler guiclass="eu.luminis.jmeter.wssampler.SingleReadWebSocketSamplerGui" testclass="eu.luminis.jmeter.wssampler.SingleReadWebSocketSampler" testname="WebSocket Single Read Sampler" enabled="false">
+          <boolProp name="TLS">false</boolProp>
+          <stringProp name="server"></stringProp>
+          <stringProp name="port">80</stringProp>
+          <stringProp name="path"></stringProp>
+          <stringProp name="connectTimeout">20000</stringProp>
+          <boolProp name="binaryPayload">false</boolProp>
+          <boolProp name="createNewConnection">false</boolProp>
+          <stringProp name="readTimeout">6000</stringProp>
+          <boolProp name="optional">false</boolProp>
+          <stringProp name="dataType">Text</stringProp>
+        </eu.luminis.jmeter.wssampler.SingleReadWebSocketSampler>
+        <hashTree/>
+        <eu.luminis.jmeter.wssampler.RequestResponseWebSocketSampler guiclass="eu.luminis.jmeter.wssampler.RequestResponseWebSocketSamplerGui" testclass="eu.luminis.jmeter.wssampler.RequestResponseWebSocketSampler" testname="新建游戏角色名称" enabled="true">
+          <boolProp name="createNewConnection">false</boolProp>
+          <boolProp name="TLS">false</boolProp>
+          <stringProp name="server"></stringProp>
+          <stringProp name="port">80</stringProp>
+          <stringProp name="path"></stringProp>
+          <stringProp name="connectTimeout">20000</stringProp>
+          <boolProp name="binaryPayload">false</boolProp>
+          <stringProp name="requestData">${requestStr}</stringProp>
+          <stringProp name="readTimeout">5000</stringProp>
+          <boolProp name="loadDataFromFile">false</boolProp>
+          <stringProp name="dataFile"></stringProp>
+        </eu.luminis.jmeter.wssampler.RequestResponseWebSocketSampler>
+        <hashTree>
+          <BeanShellPreProcessor guiclass="TestBeanGUI" testclass="BeanShellPreProcessor" testname="BeanShell PreProcessor" enabled="true">
+            <boolProp name="resetInterpreter">false</boolProp>
+            <stringProp name="parameters"></stringProp>
+            <stringProp name="filename"></stringProp>
+            <stringProp name="script">
+import java.util.Random;  
+
+String random_len2(int string_length) { 
+    chars = &quot;河北山西辽宁吉林龙江江苏浙江安徽福建江西山东河南湖北湖南广东海南四川贵州云南陕西甘肃晴海台湾内古广西壮族西宁夏北京天津上海重庆香港澳门&quot;;  
+    randomstring =&quot;&quot;;  
+    for (int i=0; i&lt;string_length; i++) {  
+        Random randomGenerator = new Random();  
+        int randomInt = randomGenerator.nextInt(chars.length());  
+        randomstring += chars.substring(randomInt,randomInt+1);  
+    }  
+    return randomstring; 
+} 
+/*
+String random_len3(int string_length) { 
+    chars = &quot;一二三四五六七八九十壹贰叁肆伍陆柒捌玖拾佰仟万亿零123567890&quot;;  
+    randomstring =&quot;&quot;;  
+    for (int i=0; i&lt;string_length; i++) {  
+        Random randomGenerator = new Random();  
+        int randomInt = randomGenerator.nextInt(chars.length());  
+        randomstring += chars.substring(randomInt,randomInt+1);  
+    }  
+    return randomstring; 
+} 
+*/
+
+String aa(){
+phone=${__time(/1000000000,)} + ${__Random(1,1000000000,)};
+ 
+String a = String.valueOf(phone);   //将phone转为字符串，因为手机号的要求类型为char
+
+return a;
+}
+String pkgid = aa();
+//String str = &quot;{\&quot;cmd\&quot;:\&quot;connect\&quot;,\&quot;token\&quot;:\&quot;test123\&quot;,\&quot;param\&quot;:{\&quot;account\&quot;:\&quot;${random_8}\&quot;,\&quot;password\&quot;:\&quot;aaaaaa\&quot;,\&quot;channelId\&quot;:1,\&quot;deviceId\&quot;:\&quot;\&quot;},\&quot;pkgid\&quot;:&quot;+pkgid+&quot;}&quot;; 
+//String str = &quot;{\&quot;cmd\&quot;:\&quot;newPlayer\&quot;,\&quot;token\&quot;:\&quot;test123\&quot;,\&quot;param\&quot;:{\&quot;name\&quot;:\&quot;${random_8}\&quot;},\&quot;pkgid\&quot;:&quot;+pkgid+&quot;}&quot;;
+
+/*
+String roleName = &quot;&quot;;
+if(!random_len2(2).equals(&quot;六四&quot;) || !random_len2(2).equals(&quot;陆四&quot;) || !random_len2(2).equals(&quot;六肆&quot;) || !random_len2(2).equals(&quot;陆肆&quot;)){
+	roleName = random_len2(2);
+} else {
+	roleName = random_len2(3);
+}
+*/
+
+String str = &quot;{\&quot;cmd\&quot;:\&quot;newPlayer\&quot;,\&quot;token\&quot;:\&quot;test123\&quot;,\&quot;param\&quot;:{\&quot;name\&quot;:\&quot;&quot;+random_len2(8)+&quot;\&quot;},\&quot;pkgid\&quot;:&quot;+pkgid+&quot;}&quot;;
+log.info(&quot;str:&quot;+random_len2(8));
+
+vars.put(&quot;tokenaa&quot;,sign);
+vars.put(&quot;pkgid&quot;,pkgid);
+//log.info(&quot;str:&quot;+str);
+//log.info(&quot;tokenaa:&quot;+sign);
+//log.info(&quot;pkgid:&quot;+pkgid);
+
+String st2 = str.replace(&quot;test123&quot;,sign);
+vars.put(&quot;requestStr&quot;,st2);
+//log.info(&quot;requestStr:&quot;+str2);</stringProp>
+          </BeanShellPreProcessor>
+          <hashTree/>
+        </hashTree>
+        <WhileController guiclass="WhileControllerGui" testclass="WhileController" testname="While Controller" enabled="false">
+          <stringProp name="WhileController.condition">1=1</stringProp>
+        </WhileController>
+        <hashTree>
+          <eu.luminis.jmeter.wssampler.RequestResponseWebSocketSampler guiclass="eu.luminis.jmeter.wssampler.RequestResponseWebSocketSamplerGui" testclass="eu.luminis.jmeter.wssampler.RequestResponseWebSocketSampler" testname="心跳" enabled="false">
+            <boolProp name="createNewConnection">false</boolProp>
+            <boolProp name="TLS">false</boolProp>
+            <stringProp name="server"></stringProp>
+            <stringProp name="port">80</stringProp>
+            <stringProp name="path"></stringProp>
+            <stringProp name="connectTimeout">20000</stringProp>
+            <boolProp name="binaryPayload">false</boolProp>
+            <stringProp name="requestData">${requestStr}</stringProp>
+            <stringProp name="readTimeout">100000</stringProp>
+            <boolProp name="loadDataFromFile">false</boolProp>
+            <stringProp name="dataFile"></stringProp>
+          </eu.luminis.jmeter.wssampler.RequestResponseWebSocketSampler>
+          <hashTree>
+            <BeanShellPreProcessor guiclass="TestBeanGUI" testclass="BeanShellPreProcessor" testname="BeanShell PreProcessor" enabled="false">
+              <boolProp name="resetInterpreter">false</boolProp>
+              <stringProp name="parameters"></stringProp>
+              <stringProp name="filename"></stringProp>
+              <stringProp name="script">
+
+String aa(){
+phone=${__time(/1000000000,)} + ${__Random(1,1000000000,)};
+ 
+String a = String.valueOf(phone);   //将phone转为字符串，因为手机号的要求类型为char
+
+return a;
+}
+String pkgid = aa();
+//String str = &quot;{\&quot;cmd\&quot;:\&quot;connect\&quot;,\&quot;token\&quot;:\&quot;test123\&quot;,\&quot;param\&quot;:{\&quot;account\&quot;:\&quot;${random_8}\&quot;,\&quot;password\&quot;:\&quot;aaaaaa\&quot;,\&quot;channelId\&quot;:1,\&quot;deviceId\&quot;:\&quot;\&quot;},\&quot;pkgid\&quot;:&quot;+pkgid+&quot;}&quot;; 
+//String str = &quot;{\&quot;cmd\&quot;:\&quot;newPlayer\&quot;,\&quot;token\&quot;:\&quot;test123\&quot;,\&quot;param\&quot;:{\&quot;name\&quot;:\&quot;${random_8}\&quot;},\&quot;pkgid\&quot;:&quot;+pkgid+&quot;}&quot;;
+String str = &quot;{\&quot;cmd\&quot;:\&quot;time\&quot;,\&quot;token\&quot;:\&quot;test123\&quot;,\&quot;param\&quot;:{},\&quot;pkgid\&quot;:&quot;+pkgid+&quot;}&quot;;
+ 
+
+vars.put(&quot;tokenaa&quot;,sign);
+vars.put(&quot;pkgid&quot;,pkgid);
+log.info(&quot;str:&quot;+str);
+log.info(&quot;tokenaa:&quot;+sign);
+log.info(&quot;pkgid:&quot;+pkgid);
+
+String st2 = str.replace(&quot;test123&quot;,sign);
+vars.put(&quot;requestStr&quot;,st2);
+log.info(&quot;requestStr:&quot;+str2);</stringProp>
+            </BeanShellPreProcessor>
+            <hashTree/>
+          </hashTree>
+          <ConstantTimer guiclass="ConstantTimerGui" testclass="ConstantTimer" testname="Constant Timer" enabled="false">
+            <stringProp name="ConstantTimer.delay">60000</stringProp>
+          </ConstantTimer>
+          <hashTree/>
+        </hashTree>
+        <eu.luminis.jmeter.wssampler.CloseWebSocketSampler guiclass="eu.luminis.jmeter.wssampler.CloseWebSocketSamplerGui" testclass="eu.luminis.jmeter.wssampler.CloseWebSocketSampler" testname="关闭ws连接" enabled="false">
+          <stringProp name="statusCode">2000</stringProp>
+          <stringProp name="readTimeout">5000</stringProp>
+        </eu.luminis.jmeter.wssampler.CloseWebSocketSampler>
+        <hashTree/>
+        <eu.luminis.jmeter.wssampler.OpenWebSocketSampler guiclass="eu.luminis.jmeter.wssampler.OpenWebSocketSamplerGui" testclass="eu.luminis.jmeter.wssampler.OpenWebSocketSampler" testname="创建ws连接" enabled="true">
+          <boolProp name="TLS">false</boolProp>
+          <stringProp name="server">1.1.195.209</stringProp>
+          <stringProp name="port">50080</stringProp>
+          <stringProp name="path"></stringProp>
+          <stringProp name="connectTimeout">5000</stringProp>
+          <stringProp name="readTimeout">5000</stringProp>
+        </eu.luminis.jmeter.wssampler.OpenWebSocketSampler>
+        <hashTree/>
+        <eu.luminis.jmeter.wssampler.RequestResponseWebSocketSampler guiclass="eu.luminis.jmeter.wssampler.RequestResponseWebSocketSamplerGui" testclass="eu.luminis.jmeter.wssampler.RequestResponseWebSocketSampler" testname="登录" enabled="true">
+          <boolProp name="createNewConnection">false</boolProp>
+          <boolProp name="TLS">false</boolProp>
+          <stringProp name="server">1.1.195.209</stringProp>
+          <stringProp name="port">10080</stringProp>
+          <stringProp name="path"></stringProp>
+          <stringProp name="connectTimeout">20000</stringProp>
+          <boolProp name="binaryPayload">false</boolProp>
+          <stringProp name="requestData">${requestStr}</stringProp>
+          <stringProp name="readTimeout">5000</stringProp>
+          <boolProp name="loadDataFromFile">false</boolProp>
+          <stringProp name="dataFile"></stringProp>
+        </eu.luminis.jmeter.wssampler.RequestResponseWebSocketSampler>
+        <hashTree>
+          <BeanShellPreProcessor guiclass="TestBeanGUI" testclass="BeanShellPreProcessor" testname="BeanShell PreProcessor" enabled="true">
+            <boolProp name="resetInterpreter">false</boolProp>
+            <stringProp name="parameters"></stringProp>
+            <stringProp name="filename"></stringProp>
+            <stringProp name="script">
+String aa(){
+phone=${__time(/1000000000,)} + ${__Random(1,1000000000,)};
+ 
+String a = String.valueOf(phone);   //将phone转为字符串，因为手机号的要求类型为char
+
+return a;
+}
+String pkgid = aa();
+String str = &quot;{\&quot;cmd\&quot;:\&quot;connect\&quot;,\&quot;token\&quot;:\&quot;test123\&quot;,\&quot;param\&quot;:{\&quot;account\&quot;:\&quot;${random_8}\&quot;,\&quot;password\&quot;:\&quot;aaaaaa\&quot;,\&quot;channelId\&quot;:1,\&quot;deviceId\&quot;:\&quot;\&quot;},\&quot;pkgid\&quot;:&quot;+pkgid+&quot;}&quot;; 
+
+
+vars.put(&quot;tokenaa&quot;,sign);
+vars.put(&quot;pkgid&quot;,pkgid);
+log.info(&quot;str:&quot;+str);
+log.info(&quot;tokenaa:&quot;+sign);
+log.info(&quot;pkgid:&quot;+pkgid);
+
+
+String st2 = str.replace(&quot;test123&quot;,sign);
+vars.put(&quot;requestStr&quot;,st2);
+log.info(&quot;requestStr:&quot;+str2);</stringProp>
+          </BeanShellPreProcessor>
+          <hashTree/>
+        </hashTree>
+        <ResultCollector guiclass="SummaryReport" testclass="ResultCollector" testname="Summary Report" enabled="true">
+          <boolProp name="ResultCollector.error_logging">false</boolProp>
+          <objProp>
+            <name>saveConfig</name>
+            <value class="SampleSaveConfiguration">
+              <time>true</time>
+              <latency>true</latency>
+              <timestamp>true</timestamp>
+              <success>true</success>
+              <label>true</label>
+              <code>true</code>
+              <message>true</message>
+              <threadName>true</threadName>
+              <dataType>true</dataType>
+              <encoding>false</encoding>
+              <assertions>true</assertions>
+              <subresults>true</subresults>
+              <responseData>true</responseData>
+              <samplerData>true</samplerData>
+              <xml>true</xml>
+              <fieldNames>true</fieldNames>
+              <responseHeaders>true</responseHeaders>
+              <requestHeaders>true</requestHeaders>
+              <responseDataOnError>false</responseDataOnError>
+              <saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage>
+              <assertionsResultsToSave>0</assertionsResultsToSave>
+              <bytes>true</bytes>
+              <sentBytes>true</sentBytes>
+              <url>true</url>
+              <threadCounts>true</threadCounts>
+              <idleTime>true</idleTime>
+              <connectTime>true</connectTime>
+            </value>
+          </objProp>
+          <stringProp name="filename"></stringProp>
+        </ResultCollector>
+        <hashTree/>
+        <ResultCollector guiclass="GraphVisualizer" testclass="ResultCollector" testname="Graph Results" enabled="true">
+          <boolProp name="ResultCollector.error_logging">false</boolProp>
+          <objProp>
+            <name>saveConfig</name>
+            <value class="SampleSaveConfiguration">
+              <time>true</time>
+              <latency>true</latency>
+              <timestamp>true</timestamp>
+              <success>true</success>
+              <label>true</label>
+              <code>true</code>
+              <message>true</message>
+              <threadName>true</threadName>
+              <dataType>true</dataType>
+              <encoding>false</encoding>
+              <assertions>true</assertions>
+              <subresults>true</subresults>
+              <responseData>true</responseData>
+              <samplerData>true</samplerData>
+              <xml>true</xml>
+              <fieldNames>true</fieldNames>
+              <responseHeaders>true</responseHeaders>
+              <requestHeaders>true</requestHeaders>
+              <responseDataOnError>false</responseDataOnError>
+              <saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage>
+              <assertionsResultsToSave>0</assertionsResultsToSave>
+              <bytes>true</bytes>
+              <sentBytes>true</sentBytes>
+              <url>true</url>
+              <threadCounts>true</threadCounts>
+              <idleTime>true</idleTime>
+              <connectTime>true</connectTime>
+            </value>
+          </objProp>
+          <stringProp name="filename"></stringProp>
+        </ResultCollector>
+        <hashTree/>
+        <ResultCollector guiclass="TableVisualizer" testclass="ResultCollector" testname="View Results in Table" enabled="true">
+          <boolProp name="ResultCollector.error_logging">false</boolProp>
+          <objProp>
+            <name>saveConfig</name>
+            <value class="SampleSaveConfiguration">
+              <time>true</time>
+              <latency>true</latency>
+              <timestamp>true</timestamp>
+              <success>true</success>
+              <label>true</label>
+              <code>true</code>
+              <message>true</message>
+              <threadName>true</threadName>
+              <dataType>true</dataType>
+              <encoding>false</encoding>
+              <assertions>true</assertions>
+              <subresults>true</subresults>
+              <responseData>true</responseData>
+              <samplerData>true</samplerData>
+              <xml>true</xml>
+              <fieldNames>true</fieldNames>
+              <responseHeaders>true</responseHeaders>
+              <requestHeaders>true</requestHeaders>
+              <responseDataOnError>false</responseDataOnError>
+              <saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage>
+              <assertionsResultsToSave>0</assertionsResultsToSave>
+              <bytes>true</bytes>
+              <sentBytes>true</sentBytes>
+              <url>true</url>
+              <threadCounts>true</threadCounts>
+              <idleTime>true</idleTime>
+              <connectTime>true</connectTime>
+            </value>
+          </objProp>
+          <stringProp name="filename"></stringProp>
+        </ResultCollector>
+        <hashTree/>
+        <ResultCollector guiclass="StatGraphVisualizer" testclass="ResultCollector" testname="Aggregate Graph" enabled="true">
+          <boolProp name="ResultCollector.error_logging">false</boolProp>
+          <objProp>
+            <name>saveConfig</name>
+            <value class="SampleSaveConfiguration">
+              <time>true</time>
+              <latency>true</latency>
+              <timestamp>true</timestamp>
+              <success>true</success>
+              <label>true</label>
+              <code>true</code>
+              <message>true</message>
+              <threadName>true</threadName>
+              <dataType>true</dataType>
+              <encoding>false</encoding>
+              <assertions>true</assertions>
+              <subresults>true</subresults>
+              <responseData>true</responseData>
+              <samplerData>true</samplerData>
+              <xml>true</xml>
+              <fieldNames>true</fieldNames>
+              <responseHeaders>true</responseHeaders>
+              <requestHeaders>true</requestHeaders>
+              <responseDataOnError>false</responseDataOnError>
+              <saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage>
+              <assertionsResultsToSave>0</assertionsResultsToSave>
+              <bytes>true</bytes>
+              <sentBytes>true</sentBytes>
+              <url>true</url>
+              <threadCounts>true</threadCounts>
+              <idleTime>true</idleTime>
+              <connectTime>true</connectTime>
+            </value>
+          </objProp>
+          <stringProp name="filename"></stringProp>
+        </ResultCollector>
+        <hashTree/>
+        <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
+          <boolProp name="ResultCollector.error_logging">false</boolProp>
+          <objProp>
+            <name>saveConfig</name>
+            <value class="SampleSaveConfiguration">
+              <time>true</time>
+              <latency>true</latency>
+              <timestamp>true</timestamp>
+              <success>true</success>
+              <label>true</label>
+              <code>true</code>
+              <message>true</message>
+              <threadName>true</threadName>
+              <dataType>true</dataType>
+              <encoding>false</encoding>
+              <assertions>true</assertions>
+              <subresults>true</subresults>
+              <responseData>true</responseData>
+              <samplerData>true</samplerData>
+              <xml>true</xml>
+              <fieldNames>true</fieldNames>
+              <responseHeaders>true</responseHeaders>
+              <requestHeaders>true</requestHeaders>
+              <responseDataOnError>false</responseDataOnError>
+              <saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage>
+              <assertionsResultsToSave>0</assertionsResultsToSave>
+              <bytes>true</bytes>
+              <sentBytes>true</sentBytes>
+              <url>true</url>
+              <threadCounts>true</threadCounts>
+              <idleTime>true</idleTime>
+              <connectTime>true</connectTime>
+            </value>
+          </objProp>
+          <stringProp name="filename"></stringProp>
+        </ResultCollector>
+        <hashTree/>
+      </hashTree>
+    </hashTree>
+  </hashTree>
+</jmeterTestPlan>
